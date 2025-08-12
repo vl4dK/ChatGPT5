@@ -1,0 +1,67 @@
+# config.yaml
+
+timezone: Europe/Amsterdam
+universe:
+  - BTC/USDT
+  - ETH/USDT
+  - SOL/USDT
+fees:
+  taker: 0.0005
+  maker: 0.0002
+slippage_bps: 1.5
+data:
+  ohlcv:
+    timeframe_primary: 1h
+    timeframe_secondary: 4h
+    lookback_months: 12
+features:
+  momentum:
+    ema_windows: [9, 21, 50, 100, 200]
+    rsi_windows: [14]
+  volatility:
+    atr_window: 14
+    parkinson_window: 24
+labeling:
+  mode: triple_barrier        # triple_barrier | forward_return
+  atr_mult_tp: 2.0
+  atr_mult_sl: 1.5
+  ttl_bars: 8
+model:
+  algo: lightgbm              # lightgbm | xgboost
+  train_window_days: 180
+  valid_window_days: 30
+  prob_threshold_long: 0.58
+  prob_threshold_short: 0.42
+risk:
+  target_vol_annual: 0.25
+  max_leverage: 2.0
+  max_position_per_asset: 0.3
+  daily_drawdown_stop: 0.03
+execution:
+  post_only: true
+  retry:
+    max_retries: 3
+    backoff_seconds: 2
+orchestration:
+  retrain_hour_local: 2       # 02:00 Europe/Amsterdam
+  live_decision_minutes: [0]  # на закрытии часа
+monitoring:
+  enable_prometheus: true
+  enable_telegram_alerts: true
+
+execution:
+  post_only: true
+  aggressiveness: 0.3           # 0..1, влияет на скорость/долю агрессивных ордеров
+  child_max_notional_bps: 50    # размер одного child-ордера как bps видимой ликвидности
+  randomize_ms: [200, 1200]     # стохастика тайминга исполнения (мс)
+  retry:
+    max_retries: 3
+    backoff_seconds: 2
+risk:
+  max_impact_bps: 8             # предельная ожидаемая цена воздействия
+  cut_size_on_toxicity: true
+stress_test:
+  enable: false
+  extra_spread_bps: 1.5
+  extra_slippage_bps: 2.0
+  early_competitor: true
