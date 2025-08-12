@@ -3,29 +3,39 @@
   "title": "Trading Bot Config",
   "type": "object",
   "properties": {
-    "timezone": { "type": "string" },
+    "timezone": {
+      "type": "string",
+      "description": "Часовой пояс для локализации времени (например, Europe/Amsterdam)"
+    },
     "universe": {
       "type": "array",
+      "description": "Список торговых инструментов в формате BASE/QUOTE",
       "items": { "type": "string" }
     },
     "fees": {
       "type": "object",
+      "description": "Биржевые комиссии",
       "properties": {
-        "taker": { "type": "number" },
-        "maker": { "type": "number" }
+        "taker": { "type": "number", "description": "Комиссия тейкера (в долях, 0.0005 = 0.05%)" },
+        "maker": { "type": "number", "description": "Комиссия мейкера (в долях)" }
       },
       "required": ["taker", "maker"]
     },
-    "slippage_bps": { "type": "number" },
+    "slippage_bps": {
+      "type": "number",
+      "description": "Допустимое проскальзывание в базисных пунктах (bps)"
+    },
     "data": {
       "type": "object",
+      "description": "Параметры данных",
       "properties": {
         "ohlcv": {
           "type": "object",
+          "description": "Параметры загрузки и агрегации свечей",
           "properties": {
-            "timeframe_primary": { "type": "string" },
-            "timeframe_secondary": { "type": "string" },
-            "lookback_months": { "type": "integer" }
+            "timeframe_primary": { "type": "string", "description": "Основной таймфрейм (например, 1h)" },
+            "timeframe_secondary": { "type": "string", "description": "Вторичный таймфрейм (например, 4h)" },
+            "lookback_months": { "type": "integer", "description": "Глубина истории в месяцах" }
           },
           "required": ["timeframe_primary", "timeframe_secondary"]
         }
@@ -33,63 +43,91 @@
     },
     "features": {
       "type": "object",
+      "description": "Настройки признаков (features)",
       "properties": {
         "momentum": {
           "type": "object",
+          "description": "Импульсные индикаторы",
           "properties": {
             "ema_windows": {
               "type": "array",
+              "description": "Окна для EMA",
               "items": { "type": "integer" }
             },
             "rsi_windows": {
               "type": "array",
+              "description": "Окна для RSI",
               "items": { "type": "integer" }
             }
           }
         },
         "volatility": {
           "type": "object",
+          "description": "Индикаторы волатильности",
           "properties": {
-            "atr_window": { "type": "integer" },
-            "parkinson_window": { "type": "integer" }
+            "atr_window": { "type": "integer", "description": "ATR окно в барах" },
+            "parkinson_window": { "type": "integer", "description": "Паркинсон окно (volatility high-low)" }
           }
         }
       }
     },
     "labeling": {
       "type": "object",
+      "description": "Параметры разметки таргетов",
       "properties": {
-        "mode": { "type": "string", "enum": ["triple_barrier", "forward_return"] },
-        "atr_mult_tp": { "type": "number" },
-        "atr_mult_sl": { "type": "number" },
-        "ttl_bars": { "type": "integer" }
+        "mode": {
+          "type": "string",
+          "enum": ["triple_barrier", "forward_return"],
+          "description": "Метод разметки: triple_barrier или forward_return"
+        },
+        "atr_mult_tp": { "type": "number", "description": "ATR-множитель для take-profit" },
+        "atr_mult_sl": { "type": "number", "description": "ATR-множитель для stop-loss" },
+        "ttl_bars": { "type": "integer", "description": "Время жизни сигнала в барах" }
       }
     },
     "model": {
       "type": "object",
+      "description": "Параметры модели ML",
       "properties": {
-        "algo": { "type": "string", "enum": ["lightgbm", "xgboost"] },
-        "train_window_days": { "type": "integer" },
-        "valid_window_days": { "type": "integer" },
-        "prob_threshold_long": { "type": "number" },
-        "prob_threshold_short": { "type": "number" }
+        "algo": {
+          "type": "string",
+          "enum": ["lightgbm", "xgboost"],
+          "description": "Алгоритм модели: LightGBM или XGBoost"
+        },
+        "train_window_days": { "type": "integer", "description": "Длина обучающего окна в днях" },
+        "valid_window_days": { "type": "integer", "description": "Длина валидационного окна в днях" },
+        "prob_threshold_long": { "type": "number", "description": "Порог вероятности для лонга" },
+        "prob_threshold_short": { "type": "number", "description": "Порог вероятности для шорта" }
       }
     },
     "risk": {
       "type": "object",
+      "description": "Параметры риск-менеджмента",
       "properties": {
-        "target_vol_annual": { "type": "number" },
-        "max_leverage": { "type": "number" },
-        "max_position_per_asset": { "type": "number" },
-        "daily_drawdown_stop": { "type": "number" }
+        "target_vol_annual": { "type": "number", "description": "Целевая годовая волатильность" },
+        "max_leverage": { "type": "number", "description": "Максимальное кредитное плечо" },
+        "max_position_per_asset": { "type": "number", "description": "Максимальная доля портфеля на один актив" },
+        "daily_drawdown_stop": { "type": "number", "description": "Дневная просадка, при которой останавливается торговля" }
       }
     },
     "execution": {
       "type": "object",
+      "description": "Параметры исполнения сделок",
       "properties": {
-        "post_only": { "type": "boolean" }
+        "post_only": { "type": "boolean", "description": "Только лимитные ордера (true/false)" }
       }
     }
   },
-  "required": ["timezone", "universe", "fees", "slippage_bps", "data", "features", "labeling", "model", "risk", "execution"]
+  "required": [
+    "timezone",
+    "universe",
+    "fees",
+    "slippage_bps",
+    "data",
+    "features",
+    "labeling",
+    "model",
+    "risk",
+    "execution"
+  ]
 }
