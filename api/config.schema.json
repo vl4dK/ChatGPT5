@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Trading Bot Config",
+  "type": "object",
+  "properties": {
+    "timezone": { "type": "string" },
+    "universe": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "fees": {
+      "type": "object",
+      "properties": {
+        "taker": { "type": "number" },
+        "maker": { "type": "number" }
+      },
+      "required": ["taker", "maker"]
+    },
+    "slippage_bps": { "type": "number" },
+    "data": {
+      "type": "object",
+      "properties": {
+        "ohlcv": {
+          "type": "object",
+          "properties": {
+            "timeframe_primary": { "type": "string" },
+            "timeframe_secondary": { "type": "string" },
+            "lookback_months": { "type": "integer" }
+          },
+          "required": ["timeframe_primary", "timeframe_secondary"]
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "momentum": {
+          "type": "object",
+          "properties": {
+            "ema_windows": {
+              "type": "array",
+              "items": { "type": "integer" }
+            },
+            "rsi_windows": {
+              "type": "array",
+              "items": { "type": "integer" }
+            }
+          }
+        },
+        "volatility": {
+          "type": "object",
+          "properties": {
+            "atr_window": { "type": "integer" },
+            "parkinson_window": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "labeling": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["triple_barrier", "forward_return"] },
+        "atr_mult_tp": { "type": "number" },
+        "atr_mult_sl": { "type": "number" },
+        "ttl_bars": { "type": "integer" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "algo": { "type": "string", "enum": ["lightgbm", "xgboost"] },
+        "train_window_days": { "type": "integer" },
+        "valid_window_days": { "type": "integer" },
+        "prob_threshold_long": { "type": "number" },
+        "prob_threshold_short": { "type": "number" }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "properties": {
+        "target_vol_annual": { "type": "number" },
+        "max_leverage": { "type": "number" },
+        "max_position_per_asset": { "type": "number" },
+        "daily_drawdown_stop": { "type": "number" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "post_only": { "type": "boolean" }
+      }
+    }
+  },
+  "required": ["timezone", "universe", "fees", "slippage_bps", "data", "features", "labeling", "model", "risk", "execution"]
+}

@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=./api/config.schema.json
+
+
 # config.yaml
 
 timezone: Europe/Amsterdam
